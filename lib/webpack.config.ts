@@ -25,6 +25,7 @@ const clientConfig: Configuration = {
 		path: path.resolve(process.cwd(), `${distFolder}/client`),
 		publicPath: process.env.PUBLIC_PATH || "/",
 		clean: true,
+		chunkLoadingGlobal: 'mobx-SSR'
 	},
 	watchOptions: {
 		ignored: ["**/server/**/*"],
@@ -108,7 +109,16 @@ const clientConfig: Configuration = {
 					},
 			  }
 			: {
-					runtimeChunk: "single",
+				splitChunks: {
+					cacheGroups: {
+						commons: {
+							test: /[/\\]node_modules[/\\]/,
+							name: "vendors",
+							chunks: "initial",
+						},
+					},
+				},
+				// runtimeChunk: "single",
 			  }),
 	},
 };
